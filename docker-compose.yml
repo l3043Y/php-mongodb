@@ -1,0 +1,28 @@
+version: "2.1"
+services:
+  php:
+    # tty: true # Enables debugging capabilities when attached to this container.
+    # image: bitnami/php-fpm:8.0
+    build: .
+    ports:
+      - 9000:9000
+    network_mode: host 
+    volumes:
+      - ./app:/app
+      - ./config/php-fpm.conf:/opt/bitnami/php/etc/php-fpm.conf
+      - ./config/custom.ini:/opt/bitnami/php/etc/conf.d/custom.ini
+      - ./config/www.conf:/opt/bitnami/php/etc/php-fpm.d/www.conf
+      - ./logs:/opt/bitnami/php/logs
+  
+#   mongo:
+#     image: mongo
+#     restart: always
+#     volumes:
+#       - mongoDB_data:/data/db
+#     network_mode: host
+#     ports:
+#       - 27000:27017
+
+# volumes:
+#   mongoDB_data:
+    # external: true

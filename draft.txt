@@ -1,0 +1,36 @@
+<?php
+
+echo "hello world";
+// PHP version 7.4 used here
+try {
+    // connect to OVHcloud Public Cloud Databases for MongoDB (cluster in version 4.4, MongoDB PHP Extension in 1.8.1)
+    $m = new MongoDB\Driver\Manager('mongodb://192.168.11.75:27017/');
+    echo "Connection to database successfully";
+    // display the content of the driver, for diagnosis purpose
+    var_dump($m);
+
+    // Bulk write inserts
+    $bulk = new MongoDB\Driver\BulkWrite;
+    $bulk->insert(['mydata' => 'alice']);
+    $bulk->insert(['mydata' => 'bob']);
+    $bulk->insert(['mydata' => 'bastien']);
+    $m->executeBulkWrite('mydb.mycol', $bulk);
+
+    $filter = ['mydata' => 'bob'];
+    $options = [];
+
+    // Query to find inserts in a specific collection
+    $query = new MongoDB\Driver\Query($filter, $options);
+    $cursor = $m->executeQuery('mydb.mycol', $query);
+
+    foreach ($cursor as $document) {
+        var_dump($document);
+    }
+}
+catch (Throwable $e) {
+    // catch throwables when the connection is not a success
+    echo "Captured Throwable for connection : " . $e->getMessage() . PHP_EOL;
+}
+echo "hello world";
+
+?>
